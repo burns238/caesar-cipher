@@ -61,9 +61,26 @@ class CaesarEncryptionSpec extends FlatSpec with Matchers {
   	testEncryptThenDecrypt(key)
   }
 
+  it should "return the original value for a negative key" in {
+    val key = -12
+    testEncryptThenDecrypt(key)
+  }
+
   def testEncryptThenDecrypt(key: Int) {
   	val encrypted = CaesarEncryption.encryptText(PlainText, key)
   	CaesarEncryption.decryptText(encrypted, key) shouldEqual PlainText
+  }
+
+  "Encrypting using Caesar Cipher" should "encrypt to the correct value" in {
+    val plainText = "mike burns"
+    val cipherText = "njlfacvsot"
+    CaesarEncryption.encryptText(plainText, 1) shouldEqual cipherText.toUpperCase
+  }
+
+  "Decrypting using Caesar Cipher" should "decrypt to the correct value" in {
+    val plainText = "mike burns"
+    val cipherText = "njlfacvsot"
+    CaesarEncryption.decryptText(cipherText, 1) shouldEqual plainText.toUpperCase
   }
 
 }

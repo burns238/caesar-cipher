@@ -41,4 +41,18 @@ class VigenereEncryptionSpec extends FlatSpec with Matchers {
   	VigenereEncryption.decryptText(encrypted, key) shouldEqual PlainText.toUpperCase
   }
 
+  "Encryption using Vigenere Cipher" should "encrypt correctly" in {
+    val key = "aaab"
+    val plainText = "What fools these mortals be"
+    val cipherText = "xibvagpqmtaviftganptubmuacf"
+    VigenereEncryption.encryptText(plainText, key) shouldEqual cipherText.toUpperCase
+  }
+
+  "Decryption using Vigenere Cipher" should "decrypt correctly" in {
+    val key = "aaab"
+    val plainText = "What fools these mortals be"
+    val cipherText = "xibvagpqmtaviftganptubmuacf"
+    VigenereEncryption.decryptText(cipherText, key) shouldEqual plainText.toUpperCase
+  }
+
 }

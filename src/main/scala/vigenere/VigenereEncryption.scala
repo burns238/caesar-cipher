@@ -20,7 +20,7 @@ object VigenereEncryption {
 		}
 
 		val processedCharacters = for {
-			group <- text.grouped(key.length).toList
+			group <- text.toUpperCase.grouped(key.length).toList
 			(char, i) <- group.zipWithIndex
 		} yield Alphabet.apply(getNewPosition(char, keyIntegers(i)))
 
