@@ -7,13 +7,13 @@ object Caesar extends App {
 	def encrypt {
 		println("Write text to encrypt")
 		val plainText = scala.io.StdIn.readLine
-		println(Encryption.encryptText(plainText, readKey))
+		println(CaesarEncryption.encryptText(plainText, readKey))
 	}
 
 	def decrypt {
 		println("Write text to decrypt")
 		val plainText = scala.io.StdIn.readLine()
-		println(Encryption.decryptText(plainText, readKey))
+		println(CaesarEncryption.decryptText(plainText, readKey))
 	}
 
 	def readKey: Int = {
@@ -21,7 +21,7 @@ object Caesar extends App {
 		try {
 			scala.io.StdIn.readLine().toInt
 		} catch {
-			case e:Exception => DefaultKey
+			case e: Exception => DefaultKey
 		}
 	}
 

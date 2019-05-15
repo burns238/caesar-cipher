@@ -2,7 +2,7 @@ package caesar
 
 import scala.math.abs
 
-object Encryption {
+object CaesarEncryption {
 	
 	val Alphabet = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -14,7 +14,7 @@ object Encryption {
 		processText(cipherText, -key)
 	}
 
-	def processText(text: String, key: Int): String = {
+	private def processText(text: String, key: Int): String = {
 		text.toUpperCase.map(char => Alphabet.apply(getNewPosition(char, key)))
 	}
 
