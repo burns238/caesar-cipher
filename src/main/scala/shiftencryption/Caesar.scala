@@ -1,4 +1,4 @@
-package encryption
+package shiftencryption
 
 object Caesar extends App {
 

@@ -1,4 +1,4 @@
-package encryption
+package shiftencryption
 
 import scala.util.Random
 
