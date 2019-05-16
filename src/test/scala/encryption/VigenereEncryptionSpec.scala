@@ -1,4 +1,4 @@
-package vigenere
+package encryption
 
 import org.scalatest._
 

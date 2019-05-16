@@ -1,4 +1,4 @@
-package caesar
+package encryption
 
 import org.scalatest._
 
