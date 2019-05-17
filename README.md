@@ -1,6 +1,6 @@
-# Caesar Cipher Practice
+# Encryption Practice
 
-A quick Caesar Cipher implementation in scala while following Learn Cryptography Basics in Python and Java. 
+Quick implementation in scala for various ciphers while following Learn Cryptography Basics in Python and Java. 
 
 https://www.udemy.com/learn-cryptography-basics-in-python/learn/v4/content
 
