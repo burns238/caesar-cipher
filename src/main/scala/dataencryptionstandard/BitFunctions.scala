@@ -21,7 +21,7 @@ object BitFunctions {
 		bytes.map(b => Integer.parseInt(b, 2).toChar)
 	}
 
-	private def padLeftZeros(text: String, length: Int): String = {
+	def padLeftZeros(text: String, length: Int): String = {
 		text.reverse.padTo(length, '0').reverse
 	}
 
@@ -51,13 +51,6 @@ object BitFunctions {
 			(b1, b2) <- bitsToBytes(bits1) zip bitsToBytes(bits2)
 			c <- padLeftZeros((b1 ^ b2).toBinaryString, 8)
 		} yield c
-	}
-
-	def sbox(bits: Vector[Char]): Vector[Char] = {
-
-		???
-
-		Vector()
 	}
 
 }

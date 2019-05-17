@@ -10,13 +10,10 @@ object SubkeyFunctions {
 		permutate(bits, PermutedChoice1)
 	}
 
-	def permutedChoice2(subKey: Vector[Char], roundCount: Int): Vector[Char] = {
+	def permutedChoice2(subKey: Vector[Char])(implicit roundNumber: Int): Vector[Char] = {
 		val (l,r) = split56(subKey)
-		val shifted = leftShift(l, Shifts(roundCount-1)) ++ leftShift(r, Shifts(roundCount-1))
+		val shifted = leftShift(l, Shifts(roundNumber-1)) ++ leftShift(r, Shifts(roundNumber-1))
 		permutate(shifted, PermutedChoice2)
 	} 
 
-	def xorWithSubKey(bits: Vector[Char])(implicit subKey: Vector[Char]): Vector[Char] = {
-		xor(bits, subKey)
-	}	
 }

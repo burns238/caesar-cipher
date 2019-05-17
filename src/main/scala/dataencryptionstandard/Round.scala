@@ -5,6 +5,7 @@ import dataencryptionstandard.SubkeyFunctions._
 import dataencryptionstandard.BitFunctions._
 import dataencryptionstandard.Permutation._
 import dataencryptionstandard.BitMappings._
+import dataencryptionstandard.Sbox._
 
 object Round {
 
@@ -14,16 +15,19 @@ object Round {
 		count match {
 			case 17 => leftBits ++ rightBits
 			case c => {
-				implicit val subKey = permutedChoice2(initialSubKey, c)
-				val nextRightBits = encryptBits(leftBits, rightBits)
+				implicit val roundNumber = count
+				val subKey = permutedChoice2(initialSubKey)
+				val nextRightBits = encryptBits(leftBits, rightBits, subKey)
 				round(rightBits, nextRightBits, subKey, c+1)
 			}
 		}
 	}
 
-	private def encryptBits(leftBits: Vector[Char], rightBits: Vector[Char])(implicit subKey: Vector[Char]): Vector[Char] = {
-		val encryptedRightBits = (expand andThen xorWithSubKey andThen sbox _ andThen roundPermutatation)(rightBits)
-		xor(encryptedRightBits, leftBits)
+	private def encryptBits(leftBits: Vector[Char], rightBits: Vector[Char], subKey: Vector[Char])(implicit roundNumber: Int): Vector[Char] = {
+		val xorWithSubKeyFunc = (bits: Vector[Char]) => xor(bits, subKey)
+
+		val encrypted = (expand andThen xorWithSubKeyFunc andThen applySbox _ andThen roundPermutation)(rightBits)
+		xor(encrypted, leftBits)
 	}
 	
 }

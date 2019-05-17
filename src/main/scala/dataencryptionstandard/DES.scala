@@ -7,7 +7,7 @@ import dataencryptionstandard.Round._
 
 object DES {
 	
-	private def crypt(plainText: String, key: String, initialPerm: Vector[Char] => Vector[Char], finalPerm: Vector[Char] => Vector[Char]): String = {
+	private def crypto(plainText: String, key: String, initialPerm: Vector[Char] => Vector[Char], finalPerm: Vector[Char] => Vector[Char]): String = {
 		if (key.length != 8) {
 			throw new Exception("Key must be 8 chars long")
 		}
@@ -22,11 +22,11 @@ object DES {
 	}
 
 	def encrypt(plainText: String, key: String): String = {
-		crypt(plainText, key, initialPermutation, inversePermutation)
+		crypto(plainText, key, initialPermutation, inversePermutation)
 	}
 
 	def decrypt(plainText: String, key: String): String = {
-		crypt(plainText, key, inversePermutation, initialPermutation)
+		crypto(plainText, key, inversePermutation, initialPermutation)
 	}
 
 }

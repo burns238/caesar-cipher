@@ -9,7 +9,7 @@ object Permutation {
 	}
 
 	val expand = (bits: Vector[Char]) => permutate(bits, BitMappings.Expansion)
-	val roundPermutatation = (bits: Vector[Char]) => permutate(bits, BitMappings.Permutation)
+	val roundPermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.Permutation)
 	val initialPermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.InitialPermutation)
 	val inversePermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.FinalPermutation)
 }
