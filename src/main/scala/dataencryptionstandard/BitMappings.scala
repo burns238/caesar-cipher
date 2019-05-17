@@ -1,6 +1,6 @@
 package dataencryptionstandard
 
-object DESBitMappings {
+object BitMappings {
 	
 	val InitialPermutation = Vector(
 	  	58, 50, 42, 34, 26, 18, 10, 2,
@@ -49,6 +49,8 @@ object DESBitMappings {
 	  	 7, 62, 54, 46, 38, 30, 22,
 	  	14,  6, 61, 53, 45, 37, 29,
 	  	21, 13,  5, 28, 20, 12,  4)
+
+	val PermutedChoice1 = PermutedChoice1Left ++ PermutedChoice1Right
 
 	val PermutedChoice2 = Vector(
 		14, 17, 11, 24,  1,  5,
