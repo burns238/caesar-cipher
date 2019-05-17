@@ -8,9 +8,6 @@ import dataencryptionstandard.Round._
 object DES {
 	
 	private def crypto(plainText: String, key: String, initialPerm: Vector[Char] => Vector[Char], finalPerm: Vector[Char] => Vector[Char]): String = {
-		if (key.length != 8) {
-			throw new Exception("Key must be 8 chars long")
-		}
 
 		val (leftBits, rightBits) = (initialPerm andThen split64)(stringToBits(plainText))
 		val subKey = permutedChoice1(stringToBits(key))

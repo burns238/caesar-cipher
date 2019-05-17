@@ -15,8 +15,8 @@ object Round {
 		count match {
 			case 17 => leftBits ++ rightBits
 			case c => {
-				implicit val roundNumber = count
-				val subKey = permutedChoice2(initialSubKey)
+				implicit val roundNumber = c
+				val subKey = permutedChoice2(initialSubKey)	
 				val nextRightBits = encryptBits(leftBits, rightBits, subKey)
 				round(rightBits, nextRightBits, subKey, c+1)
 			}
