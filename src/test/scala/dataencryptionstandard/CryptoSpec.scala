@@ -61,7 +61,7 @@ class CryptoSpec extends FlatSpec with Matchers {
     val encrypted = DES.encrypt(initialString, key)
     val decrypted = DES.decrypt(encrypted, key) 
     val endingTime = System.currentTimeMillis();
-    (endingTime - startingTime).toInt should be < 10
+    (endingTime - startingTime).toInt should be < 1500
   }
 
 }
