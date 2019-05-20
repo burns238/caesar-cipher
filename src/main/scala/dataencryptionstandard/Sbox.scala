@@ -13,10 +13,10 @@ object Sbox {
 	def mapByteUsingSbox(bits: Vector[Char], sbox: Vector[Vector[Int]]): Vector[Char] = {
 		// The first and last bits determine the first dimension in the lookup table,
 		//  the middle 4 characters determine the second
-		val firstDimension = intFromBits(Vector(bits(0),bits(5)))
-		val secondDimension = intFromBits(Vector(bits(1),bits(2),bits(3),bits(4)))
-		val thatIntFromSbox = sbox(firstDimension)(secondDimension)
-		padLeftZeros(thatIntFromSbox.toBinaryString, 4).toVector
+		val firstDim = intFromBits(Vector(bits(0),bits(5)))
+		val secondDim = intFromBits(Vector(bits(1),bits(2),bits(3),bits(4)))
+		val mappedInt = sbox(firstDim)(secondDim)
+		padLeftZeros(mappedInt.toBinaryString, 4).toVector
 	}
 
 	private def intFromBits(bits: Vector[Char]) = Integer.parseInt(bits.mkString, 2)

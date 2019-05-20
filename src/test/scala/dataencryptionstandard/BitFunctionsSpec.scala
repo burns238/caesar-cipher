@@ -11,7 +11,7 @@ class BitFunctionsSpec extends FlatSpec with Matchers {
   }
 
   "split" should "for a 64 bit vector, return the two halves in a tuple" in {
-    BitFunctions.split64(SixtyFourBits) shouldEqual ThirtyTwoBitsTuple
+    BitFunctions.split(SixtyFourBits) shouldEqual ThirtyTwoBitsTuple
   }
 
   "stringToBits" should "convert a single character to a vector representing its bits" in {

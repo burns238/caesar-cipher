@@ -34,17 +34,14 @@ object BitFunctions {
 	}
 
 	def swap(bits: Vector[Char]): Vector[Char] = {
-		val (left, right) = split64(bits)
-		right ++ left
+		val (l, r) = split(bits)
+		r ++ l
 	}
 
-	private def split(bits: Vector[Char], bitCount: Int): (Vector[Char], Vector[Char]) = {
-		val grouped = bits.grouped(bitCount).toVector
+	def split(bits: Vector[Char]): (Vector[Char], Vector[Char]) = {
+		val grouped = bits.grouped(bits.length/2).toVector
 		(grouped(0), grouped(1))
 	}
-
-	val split64 = (bits: Vector[Char]) => split(bits, 32)
-	val split56 = (bits: Vector[Char]) => split(bits, 28)
 
 	def xor(bits1: Vector[Char], bits2: Vector[Char]): Vector[Char] = {
 		for {

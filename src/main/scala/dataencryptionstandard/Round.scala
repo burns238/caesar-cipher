@@ -15,7 +15,6 @@ object Round {
 		count match {
 			case 17 => leftBits ++ rightBits
 			case c => {
-				implicit val roundNumber = c
 				val nextRightBits = encryptBits(leftBits, rightBits, subKeys(c-1))
 				round(rightBits, nextRightBits, subKeys, c+1)
 			}

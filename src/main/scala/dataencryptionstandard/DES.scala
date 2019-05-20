@@ -26,9 +26,10 @@ object DES {
 
 	private def cryptChunk(plainText: String, subKeys: Seq[Vector[Char]], index: Int): Future[(String, Int)] = {
 		Future {
-			val (leftBits, rightBits) = (initialPermutation andThen split64)(stringToBits(plainText))
-			val postRoundsBits = round(leftBits, rightBits, subKeys, 1)
-			val finalBits = (swap _ andThen inversePermutation)(postRoundsBits)
+			val InitialRound = 1
+			val (l, r) = (initialPermutation andThen split _)(stringToBits(plainText))
+			val postRounds = round(l, r, subKeys, InitialRound)
+			val finalBits = (swap _ andThen inversePermutation)(postRounds)
 			(bitsToString(finalBits), index)
 		}
 	}

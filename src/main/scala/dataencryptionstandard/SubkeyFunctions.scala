@@ -9,14 +9,14 @@ import dataencryptionstandard.BitFunctions._
 object SubkeyFunctions {
 	
 	def leftShiftKey(subKey: Vector[Char], roundNumber: Int): Vector[Char] = {
-		val (l,r) = split56(subKey)
+		val (l,r) = split(subKey)
 		leftShift(l, Shifts(roundNumber-1)) ++ leftShift(r, Shifts(roundNumber-1))
 	} 
 
 	def generateSubKeys(key: String): Seq[Vector[Char]] = {
+		val InitialRound = 1
 		val permuted1 = permutedChoice1(stringToBits(key))
-		generateKeys(permuted1, Seq(), 1)
-
+		generateKeys(permuted1, Seq(), InitialRound)
 	}
 
 	@tailrec
