@@ -32,7 +32,7 @@ object BitMappings {
 	  	24, 25, 26, 27, 28, 29,
 	  	28, 29, 30, 31, 32,  1)
 
-	val Permutation = Vector(
+	val RoundPermutation = Vector(
 		16,  7, 20, 21, 29, 12, 28, 17,
 	   	 1, 15, 23, 26,  5, 18, 31, 10,
 	   	 2,  8, 24, 14, 32, 27,  3,  9,

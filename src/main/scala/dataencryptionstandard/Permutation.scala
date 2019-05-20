@@ -1,6 +1,7 @@
 package dataencryptionstandard
 
 import scala.annotation.tailrec
+import dataencryptionstandard.BitMappings._
 
 object Permutation {
 	
@@ -8,8 +9,10 @@ object Permutation {
 		permutation.map(v => bits.apply(v-1))
 	}
 
-	val expand = (bits: Vector[Char]) => permutate(bits, BitMappings.Expansion)
-	val roundPermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.Permutation)
-	val initialPermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.InitialPermutation)
-	val inversePermutation = (bits: Vector[Char]) => permutate(bits, BitMappings.FinalPermutation)
+	val expand = (bits: Vector[Char]) => permutate(bits, Expansion)
+	val roundPermutation = (bits: Vector[Char]) => permutate(bits, RoundPermutation)
+	val initialPermutation = (bits: Vector[Char]) => permutate(bits, InitialPermutation)
+	val inversePermutation = (bits: Vector[Char]) => permutate(bits, FinalPermutation)
+	val permutedChoice1 = (bits: Vector[Char]) => permutate(bits, PermutedChoice1)
+	val permutedChoice2 = (bits: Vector[Char]) => permutate(bits, PermutedChoice2)
 }

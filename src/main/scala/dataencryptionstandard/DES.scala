@@ -7,23 +7,22 @@ import dataencryptionstandard.Round._
 
 object DES {
 	
-	private def crypto(plainText: String, key: String, initialPerm: Vector[Char] => Vector[Char], finalPerm: Vector[Char] => Vector[Char]): String = {
-
-		val (leftBits, rightBits) = (initialPerm andThen split64)(stringToBits(plainText))
-		val subKey = permutedChoice1(stringToBits(key))
-
-		val postRoundsBits = round(leftBits, rightBits, subKey, 1)
-		val finalBits = (swap _ andThen finalPerm)(postRoundsBits)
-
+	private def crypto(plainText: String, subKeys: Seq[Vector[Char]]): String = {
+		val (leftBits, rightBits) = (initialPermutation andThen split64)(stringToBits(plainText))
+		val postRoundsBits = round(leftBits, rightBits, subKeys, 1)
+		val finalBits = (swap _ andThen inversePermutation)(postRoundsBits)
 		bitsToString(finalBits)
 	}
 
 	def encrypt(plainText: String, key: String): String = {
-		crypto(plainText, key, initialPermutation, inversePermutation)
+		val subKeys = generateSubKeys(key)
+		crypto(plainText, subKeys)
 	}
 
+	//To decrypt, we use the same algorithm but reverse the subkeys we generate from the key passed in
 	def decrypt(plainText: String, key: String): String = {
-		crypto(plainText, key, inversePermutation, initialPermutation)
+		val subKeys = generateSubKeys(key).reverse
+		crypto(plainText, subKeys)
 	}
 
 }

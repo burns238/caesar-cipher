@@ -9,7 +9,7 @@ object BitVectorHelper {
   }
 
   def createBitVector(bits: String): Vector[Char] = {
-      bits.toVector
+     bits.toVector
   }
 
 }

@@ -11,22 +11,21 @@ object Round {
 
 	//Recursive function to run through all 16 rounds. The initial roundCount needs to be 1.
 	@tailrec
-	def round(leftBits: Vector[Char], rightBits: Vector[Char], initialSubKey: Vector[Char], count: Int): Vector[Char] = {
+	def round(leftBits: Vector[Char], rightBits: Vector[Char], subKeys: Seq[Vector[Char]], count: Int): Vector[Char] = {
 		count match {
 			case 17 => leftBits ++ rightBits
 			case c => {
 				implicit val roundNumber = c
-				val subKey = permutedChoice2(initialSubKey)	
-				val nextRightBits = encryptBits(leftBits, rightBits, subKey)
-				round(rightBits, nextRightBits, subKey, c+1)
+				val nextRightBits = encryptBits(leftBits, rightBits, subKeys(c-1))
+				round(rightBits, nextRightBits, subKeys, c+1)
 			}
 		}
 	}
 
-	private def encryptBits(leftBits: Vector[Char], rightBits: Vector[Char], subKey: Vector[Char])(implicit roundNumber: Int): Vector[Char] = {
-		val xorWithSubKeyFunc = (bits: Vector[Char]) => xor(bits, subKey)
-
-		val encrypted = (expand andThen xorWithSubKeyFunc andThen applySbox _ andThen roundPermutation)(rightBits)
+	private def encryptBits(leftBits: Vector[Char], rightBits: Vector[Char], subKey: Vector[Char]): Vector[Char] = {
+		val expanded = expand(rightBits)
+		val xoredWithSubKey = xor(expanded, subKey)
+		val encrypted = (applySboxes _ andThen roundPermutation)(xoredWithSubKey)
 		xor(encrypted, leftBits)
 	}
 	
