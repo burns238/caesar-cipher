@@ -11,7 +11,7 @@ import dataencryptionstandard.Permutation._
 import dataencryptionstandard.SubkeyFunctions._
 import dataencryptionstandard.Round._
 
-object DES {
+object DataEncryptionStandard {
 	
 	private def crypto(plainText: String, subKeys: Seq[Vector[Char]]): String = {
 		val textChunks: Vector[String] = plainText.grouped(8).toVector

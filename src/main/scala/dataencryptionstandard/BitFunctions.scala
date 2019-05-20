@@ -15,7 +15,7 @@ object BitFunctions {
 		bitsToBytes(bits).mkString
 	}
 
-	//The vector of chars passed in reflects the bits, the chars passed out are actually chars
+	//The vector of chars passed in reflects the bits, the chars passed out are actually characters
 	private def bitsToBytes(bits: Vector[Char]): Vector[Char] = {
 		val bytes = bits.grouped(8).map(_.mkString).toVector
 		bytes.map(b => Integer.parseInt(b, 2).toChar)
