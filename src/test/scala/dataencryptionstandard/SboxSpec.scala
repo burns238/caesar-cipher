@@ -1,9 +1,9 @@
 package dataencryptionstandard
 
 import org.scalatest._
-import dataencryptionstandard.Sbox._
 import dataencryptionstandard.BitVectorHelper._
 import dataencryptionstandard.BitMappings._
+import dataencryptionstandard.BitFunctions._
 
 class SboxSpec extends FlatSpec with Matchers {
 

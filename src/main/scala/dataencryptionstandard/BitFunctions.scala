@@ -1,7 +1,6 @@
 package dataencryptionstandard
 
-import dataencryptionstandard.BitMappings.{Expansion, FinalPermutation, InitialPermutation, PermutedChoice1, PermutedChoice2, RoundPermutation}
-import dataencryptionstandard.Round._
+import dataencryptionstandard.BitMappings._
 
 import scala.annotation.tailrec
 import scala.util.{Success, Try}
@@ -10,16 +9,6 @@ object BitFunctions {
 
 	val InitialRound = 1
 
-	def cryptChunk(plainText: String, subKeys: Try[Seq[Vector[Char]]], index: Int): Try[(String, Int)] =
-    for {
-      bits    <- stringToBits(plainText)
-      init    <- initialPermutation(bits)
-			(l, r) 	<- split(init)
-      newBits <- round(l, r, subKeys, InitialRound)
-      swapped <- swap(newBits)
-      inverse <- inversePermutation(swapped)
-    } yield (bitsToString(inverse), index)
-	
 	def stringToBits(text: String): Try[Vector[Char]] =
 		Try((for {
 			char  <- text
@@ -60,11 +49,20 @@ object BitFunctions {
 	def permutate(bits: Vector[Char], permutation: Vector[Int]): Try[Vector[Char]] =
 		Try(permutation.map(v => bits.apply(v-1)))
 
-	def expand(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, Expansion)
-	def roundPermutation(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, RoundPermutation)
-	def initialPermutation(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, InitialPermutation)
-	def inversePermutation(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, FinalPermutation)
-	def permutedChoice1(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, PermutedChoice1)
-	def permutedChoice2(bits: Vector[Char]): Try[Vector[Char]] = permutate(bits, PermutedChoice2)
+	def applySboxes(bits: Vector[Char]): Try[Vector[Char]] = {
+		val bytes = bits.grouped(6).toVector
+		Try((for (i <- 0 to 7) yield mapByteUsingSbox(bytes(i), Sboxs(i))).toVector.flatten)
+	}
+
+	def mapByteUsingSbox(bits: Vector[Char], sbox: Vector[Vector[Int]]): Vector[Char] = {
+		// The first and last bits determine the first dimension in the lookup table,
+		//  the middle 4 characters determine the second
+		val firstDim = intFromBits(Vector(bits(0),bits(5)))
+		val secondDim = intFromBits(Vector(bits(1),bits(2),bits(3),bits(4)))
+		val mappedInt = sbox(firstDim)(secondDim)
+		padLeftZeros(mappedInt.toBinaryString, 4).toVector
+	}
+
+	private def intFromBits(bits: Vector[Char]) = Integer.parseInt(bits.mkString, 2)
 
 }

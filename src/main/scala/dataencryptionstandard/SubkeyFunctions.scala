@@ -18,7 +18,7 @@ object SubkeyFunctions {
 		val InitialRound = 1
 		for {
 			bits 			<- stringToBits(key)
-			permuted 	<- permutedChoice1(bits)
+			permuted 	<- permutate(bits, PermutedChoice1)
 			keys 			<- generateKeys(permuted, Seq(), InitialRound)
 		} yield keys
 	}
@@ -29,7 +29,7 @@ object SubkeyFunctions {
 			case c =>
 				for {
 					shiftedKey 	<- leftShiftKey(initialKey, c)
-					newSubKey 	<- permutedChoice2(shiftedKey)
+					newSubKey 	<- permutate(shiftedKey, PermutedChoice2)
 					keys 				<- generateKeys(shiftedKey, subKeys :+ newSubKey, c+1)
 				} yield keys
 		}
