@@ -3,11 +3,13 @@ package dataencryptionstandard
 import dataencryptionstandard.BitMappings._
 import dataencryptionstandard.BitFunctions._
 
+import scala.util.Try
+
 object Sbox {
 	
-	def applySboxes(bits: Vector[Char]): Vector[Char] = {
+	def applySboxes(bits: Vector[Char]): Try[Vector[Char]] = {
 		val bytes = bits.grouped(6).toVector
-		(for (i <- 0 to 7) yield mapByteUsingSbox(bytes(i), Sboxs(i))).toVector.flatten
+		Try((for (i <- 0 to 7) yield mapByteUsingSbox(bytes(i), Sboxs(i))).toVector.flatten)
 	}
 
 	def mapByteUsingSbox(bits: Vector[Char], sbox: Vector[Vector[Int]]): Vector[Char] = {

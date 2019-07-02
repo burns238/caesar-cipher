@@ -1,58 +1,47 @@
 package dataencryptionstandard
 
 import org.scalatest._
-import dataencryptionstandard.DataEncryptionStandard._
+import dataencryptionstandard.DES._
+import scala.concurrent.Future
 
-class CryptoSpec extends FlatSpec with Matchers {
+import scala.util.Success
+
+class CryptoSpec extends AsyncFlatSpec with Matchers {
 
   "decrypt" should "decrypt a numerical string we've encrypted" in {
-  	val initialString = "87878787"
-  	val key = "aB88eiP3"
-    val encrypted = encrypt(initialString, key)
-    encrypted shouldEqual "Á$tn¡þ°O"
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption("87878787","aB88eiP3")
   }
 
   it should "decrypt a string with spaces we've encrypted" in {
-  	val initialString = "one time"
-  	val key = "aB88eiP3"
-    val encrypted = DataEncryptionStandard.encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption("one time","aB88eiP3")
   }
 
   it should "decrypt a string with a mix of casing" in {
-  	val initialString = "OneTimes"
-  	val key = "aB88eiP3"
-    val encrypted = encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption("OneTimes","aB88eiP3")
   }
 
   it should "decrypt a string with a numerical key" in {
-  	val initialString = "87878787"
-  	val key = "12345678"
-    val encrypted = encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption("87878787","12345678")
   }
 
   it should "decrypt a string longer than 8 characters" in {
   	val initialString = "LOREM IPSUM DOLOR SIT AMET CONSECTETUR ADIPISCING ELIT ITA CUM EA VOLUNT RETINERE QUAE SUPERIORI SENTENTIAE CONVENIUNT IN ARISTONEM INCIDUNT"
-  	val key = "aa236eGh"
-    val encrypted = encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption(initialString, "aa236eGh")
   }
 
   it should "decrypt a string shorter than 8 characters" in {
-  	val initialString = "Ab3"
-  	val key = "aa236eGh"
-    val encrypted = encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption("Ab3","aa236eGh")
   }
 
   it should "decrypt a string that's ridiculously long" in {
-  	val initialString = LoremIpsumHelper.LoremIpsum
-  	val key = "aa236eGh"
-    val encrypted = encrypt(initialString, key)
-    decrypt(encrypted, key) shouldEqual initialString
+    testEncryption(LoremIpsumHelper.LoremIpsum, "aa236eGh")
+  }
+
+  def testEncryption(initialString: String, key: String): Future[Assertion] = {
+      for {
+        enc <- encrypt(initialString, key)
+        dec <- decrypt(enc.get, key)
+      } yield dec.map(_.trim) shouldEqual Success(initialString)
   }
 
 }

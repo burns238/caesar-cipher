@@ -1,34 +1,37 @@
 package dataencryptionstandard
 
-import scala.annotation.tailrec
-
-import dataencryptionstandard.Permutation._
 import dataencryptionstandard.BitMappings._
 import dataencryptionstandard.BitFunctions._
 
+import scala.util.Try
+
 object SubkeyFunctions {
 	
-	def leftShiftKey(subKey: Vector[Char], roundNumber: Int): Vector[Char] = {
-		val (l,r) = split(subKey)
-		leftShift(l, Shifts(roundNumber-1)) ++ leftShift(r, Shifts(roundNumber-1))
-	} 
+	def leftShiftKey(subKey: Vector[Char], roundNumber: Int): Try[Vector[Char]] =
+		for {
+			(l, r) 	<- split(subKey)
+			a 			<- leftShift(l, Shifts(roundNumber-1))
+			b 			<- leftShift(r, Shifts(roundNumber-1))
+		} yield a ++ b
 
-	def generateSubKeys(key: String): Seq[Vector[Char]] = {
+	def generateSubKeys(key: String): Try[Seq[Vector[Char]]] = {
 		val InitialRound = 1
-		val permuted1 = permutedChoice1(stringToBits(key))
-		generateKeys(permuted1, Seq(), InitialRound)
+		for {
+			bits 			<- stringToBits(key)
+			permuted 	<- permutedChoice1(bits)
+			keys 			<- generateKeys(permuted, Seq(), InitialRound)
+		} yield keys
 	}
 
-	@tailrec
-	private def generateKeys(initialKey: Vector[Char], subKeys: Seq[Vector[Char]], count: Int): Seq[Vector[Char]] = {
+	private def generateKeys(initialKey: Vector[Char], subKeys: Seq[Vector[Char]], count: Int): Try[Seq[Vector[Char]]] =
 		count match {
-			case 17 => subKeys
-			case c => {
-				val shiftedKey = leftShiftKey(initialKey, c)
-				val newSubKey = permutedChoice2(shiftedKey)
-				generateKeys(shiftedKey, subKeys :+ newSubKey, c+1)
-			}
+			case 17 => Try(subKeys)
+			case c =>
+				for {
+					shiftedKey 	<- leftShiftKey(initialKey, c)
+					newSubKey 	<- permutedChoice2(shiftedKey)
+					keys 				<- generateKeys(shiftedKey, subKeys :+ newSubKey, c+1)
+				} yield keys
 		}
-	}
 
 }
