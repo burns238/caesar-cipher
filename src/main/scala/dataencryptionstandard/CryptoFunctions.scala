@@ -8,8 +8,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Success, Try}
 import cats.implicits._
 
-import scala.annotation.tailrec
-
 object CryptoFunctions {
 
   def crypto(plainText: String, subKeys: Try[Seq[Vector[Char]]]): Future[Try[String]] = {
@@ -27,33 +25,36 @@ object CryptoFunctions {
       bits    <- stringToBits(plainText)
       init    <- permutate(bits, InitialPermutation)
       (l, r)  <- split(init)
-      newBits <- round(Success(l), Success(r), subKeys, InitialRound)
+      newBits <- rounds(l, r, subKeys)
       swapped <- swap(newBits)
       inverse <- permutate(swapped, FinalPermutation)
     } yield (bitsToString(inverse), index)
 
-  //Recursive function to run through all 16 rounds. The initial roundCount needs to be 1.
-  @tailrec
-  def round(leftBits: Try[Vector[Char]], rightBits: Try[Vector[Char]], subKeys: Try[Seq[Vector[Char]]], count: Int): Try[Vector[Char]] =
-    count match {
-      case 17 => for {
-        l <- leftBits
-        r <- rightBits
-      } yield l ++ r
-      case c =>
-        val subKeyIndex = c-1
-        val nextRoundCount = c+1
-        val nextRight = for {
-          key       <- subKeys
-          r         <- rightBits
-          l         <- leftBits
-          expanded  <- permutate(r, Expansion)
-          xored     <- xor(expanded, key(subKeyIndex))
-          sboxed    <- applySboxes(xored)
-          permuted  <- permutate(sboxed, RoundPermutation)
-          next      <- xor(permuted, l)
-        } yield next
-        CryptoFunctions.round(rightBits, nextRight, subKeys, nextRoundCount)
+  def rounds(leftBits: Vector[Char], rightBits: Vector[Char], subKeys: Try[Seq[Vector[Char]]]): Try[Vector[Char]] = {
+    val range = 1 to 16
+    val (newLeft, newRight) = range.foldLeft((Try(leftBits), Try(rightBits))){(tup, count) =>
+      val currentLeftBits = tup._1
+      val currentRightBits = tup._2
+      val subKeyIndex = count-1
+      (currentRightBits, applyRound(currentLeftBits, currentRightBits, subKeys.map(_(subKeyIndex))))
     }
+
+    for {
+      l <- newLeft
+      r <- newRight
+    } yield l ++ r
+  }
+
+  def applyRound(leftBits: Try[Vector[Char]], rightBits: Try[Vector[Char]], subKey: Try[Vector[Char]]): Try[Vector[Char]] =
+    for {
+      key       <- subKey
+      r         <- rightBits
+      l         <- leftBits
+      expanded  <- permutate(r, Expansion)
+      xored     <- xor(expanded, key)
+      sboxed    <- applySboxes(xored)
+      permuted  <- permutate(sboxed, RoundPermutation)
+      next      <- xor(permuted, l)
+    } yield next
 
 }
